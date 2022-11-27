@@ -97,3 +97,20 @@ def jpeg_bulk(image, p_min, p_max, p_delta):
         p_current += p_delta
 
     return np.array(jpeg_images)
+
+
+def cut_and_jpeg_bulk(image, container, p1_min, p1_max, p1_delta, p2_min, p2_max, p2_delta):
+    cut_and_jpeg_images = []
+    items_count_cut = int(np.round((p1_max-p1_min) / p1_delta)) + 1
+    items_count_jpeg = int(np.round((p2_max-p2_min) / p2_delta)) + 1
+
+    p1_current = p1_min
+    p2_current = p2_min
+    for i in range(0, items_count_jpeg):
+        for j in range(0, items_count_cut):
+            cut_image = cut(image, container, p1_current)
+            cut_and_jpeg_image = jpeg(cut_image, p2_current)
+            cut_and_jpeg_images.append(cut_and_jpeg_image)
+            p1_current += p1_delta
+        p2_current += p2_delta
+    return np.array(cut_and_jpeg_images)
