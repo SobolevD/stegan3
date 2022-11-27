@@ -7,8 +7,7 @@ from lab2.utils.snipping import get_H_zone, merge_pictures_H_zone
 from lab2.utils.watermark import generate_watermark
 
 
-def do_embedding(image_path, result_path):
-    container = read_image(image_path)
+def do_embedding(container):
 
     # 1. Реализовать генерацию ЦВЗ 𝛺 как псевдослучайной последовательности заданной длины из чисел,
     # распределённых по нормальному закону
@@ -31,4 +30,4 @@ def do_embedding(image_path, result_path):
     merged_abs_picture = merge_pictures_H_zone(abs_fft_container, H_zone_watermark)
     complex_matrix = get_complex_matrix(merged_abs_picture, phase_fft_container)
     processed_image = get_inverse_fft_image(complex_matrix)
-    write_image(processed_image, result_path)
+    return processed_image
