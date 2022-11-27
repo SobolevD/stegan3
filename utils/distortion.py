@@ -1,4 +1,5 @@
 import numpy as np
+import cv2
 from PIL import Image
 from skimage.io import imsave, imread
 
@@ -13,6 +14,17 @@ def cut(image, container, v=0.25):
 
     result_image[0:new_shape[0], 0:new_shape[1]] = image_part
     return result_image
+
+
+def cut_bulk(image, container, p_min, p_max, p_delta):
+    cut_images = []
+    items_count = int(np.round((p_max-p_min) / p_delta)) + 1
+    p_current = p_min
+    for i in range(0, items_count):
+        cut_images.append(cut(image, container, p_current))
+        p_current += p_delta
+
+    return np.array(cut_images)
 
 
 def scale(image, k=0.25):
@@ -42,19 +54,46 @@ def scale(image, k=0.25):
     return result_image
 
 
+def scale_bulk(image, p_min, p_max, p_delta):
+    scale_images = []
+    items_count = int(np.round((p_max-p_min) / p_delta)) + 1
+    p_current = p_min
+    for i in range(0, items_count):
+        scale_images.append(scale(image, p_current))
+        p_current += p_delta
+
+    return np.array(scale_images).astype('int')
+
+
 def smooth(image, M=3):
-    N = image.shape
-    g = (1. / float(M ** 2)) * np.ones((M, M))
-
-    image_copy = image.copy()
-    for i in range(0, N[0] - M + 1):
-        for j in range(0, N[1] - M + 1):
-            image_copy[i:i+M, j:j+M] = g * image_copy[i:i+M, j:j+M]
-
-    return image_copy
+    return cv2.blur(image, (M, M))
 
 
-def jpeg(image, quality=0.95):
+def smooth_bulk(image, p_min, p_max, p_delta):
+    smooth_images = []
+    items_count = int(np.round((p_max-p_min) / p_delta)) + 1
+
+    p_current = p_min
+    for i in range(0, items_count):
+        smooth_images.append(smooth(image, p_current))
+        p_current += p_delta
+
+    return np.array(smooth_images)
+
+
+def jpeg(image, quality=85):
     imsave('resources/barb.jpeg', image, quality=quality)
     jpeg_image = imread('resources/barb.jpeg')
     return jpeg_image
+
+
+def jpeg_bulk(image, p_min, p_max, p_delta):
+    jpeg_images = []
+    items_count = int(np.round((p_max-p_min) / p_delta)) + 1
+
+    p_current = p_min
+    for i in range(0, items_count):
+        jpeg_images.append(jpeg(image, p_current))
+        p_current += p_delta
+
+    return np.array(jpeg_images)
