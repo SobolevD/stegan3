@@ -5,6 +5,7 @@ from lab2.utils.in_out import read_image, write_image
 from utils.distortion import cut, scale, smooth, jpeg, cut_bulk, scale_bulk, smooth_bulk, jpeg_bulk, cut_and_jpeg_bulk
 from matplotlib import pyplot as plt
 
+
 if __name__ == '__main__':
 
     container = read_image('resources/barb.tif')
@@ -54,7 +55,7 @@ if __name__ == '__main__':
     plt.plot(x, jpeg_rhos)
     plt.show()
 
-    cut_and_jpeg = cut_and_jpeg_bulk(image, container, 0.2, 0.9, 0.1, 30, 90, 10)
+    cut_and_jpeg = cut_and_jpeg_bulk(image, container, 0.2, 0.9, 0.1, 30, 90, 10, H_zone, watermark)
     a = 3
 
 
